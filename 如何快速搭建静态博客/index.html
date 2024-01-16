@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn" lang="zh-cn">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.121.2">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>如何快速搭建静态博客 &middot; 不满是向上的车轮</title>
+  <meta name="description" content="快速配置" />
+
+  
+  <link type="text/css" rel="stylesheet" href="https://spoofer0.github.io/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="https://spoofer0.github.io/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="https://spoofer0.github.io/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="https://spoofer0.github.io/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class="theme-base-0f layout-reverse">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://spoofer0.github.io/"><h1>不满是向上的车轮</h1></a>
+      <p class="lead">
+       can can need 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="https://spoofer0.github.io/">Home</a> </li>
+        <li><a href="/posts/"> Posts </a></li><li><a href="/tags/"> Tags </a></li>
+      </ul>
+    </nav>
+
+    <p>&copy; 2024. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>如何快速搭建静态博客</h1>
+  <time datetime=2024-01-16T10:31:06&#43;0800 class="post-date">2024/1/16 10:31:06, Tue</time>
+  <h3 id="安装hugo">安装hugo</h3>
+<pre tabindex="0"><code>install hugo  
+hugo version  
+hugo new site blog-demo  
+</code></pre><h3 id="下载主题">下载主题</h3>
+<pre tabindex="0"><code>cd blog-demo  
+git clone  git@github.com:colorchestra/smol.git themes/smol  
+cd themes/smol  
+rm -rf .git  
+</code></pre><h3 id="配置">配置</h3>
+<p>hugo.toml</p>
+<pre tabindex="0"><code>baseURL = &#39;https://spoofer0.github.io/&#39;
+languageCode = &#39;zh-cn&#39; #en-us
+defaultContentLanguage = &#39;zh-cn&#39;
+theme = &#34;hyde&#34;
+
+title = &#39;不满是向上的车轮&#39;
+
+paginate = 10
+ignoreErrors = [&#34;error-remote-getjson&#34;, &#34;error-missing-instagram-accesstoken&#34;]
+
+[author]
+  name = &#34;spoofer0&#34;
+
+# Menu config
+# 菜单配置
+[menu]
+
+  [[menu.main]]
+    weight = 1
+    identifier = &#34;posts&#34;  
+    pre = &#34;&#34;     
+    post = &#34;&#34;
+    name = &#34;Posts&#34;
+    url = &#34;/posts/&#34;  
+    title = &#34;&#34;
+
+  [[menu.main]]
+    weight = 2
+    identifier = &#34;tags&#34;
+    pre = &#34;&#34;
+    post = &#34;&#34;
+    name = &#34;Tags&#34;
+    url = &#34;/tags/&#34;
+    title = &#34;&#34;
+
+[params]
+  themeColor = &#34;theme-base-0f&#34;
+  layoutReverse = true
+  Description = &#34;can can need&#34;
+
+[Permalinks]
+  #posts = &#34;:year/:month/:filename&#34;
+  posts = &#34;:filename&#34;
+</code></pre><h3 id="本地调试预览">本地调试预览</h3>
+<pre tabindex="0"><code>hugo server
+hugo server --theme=hyde  --buildDrafts --watch  
+</code></pre><h3 id="发布文章">发布文章</h3>
+<pre tabindex="0"><code>hugo new posts/blog-test.md  
+hugo new content  --kind  posts/blog-test.md  
+</code></pre><h3 id="生成public发布文件夹">生成PUBLIC发布文件夹</h3>
+<p><code> hugo</code></p>
+<h3 id="发布配置">发布配置</h3>
+<pre tabindex="0"><code>CNAME  
+hugo.toml-&gt;baseURL 改为自己的自定义域名。  
+</code></pre><h3 id="手动发布">手动发布</h3>
+<pre tabindex="0"><code>将 public/ 目录初始化为 git 仓库并关联远程仓库（spo0fer.github.io）来推送网页静态文件。  
+hugo   #生产静态文件到public  
+cd public  
+git init  
+git remote add origin git@github.com:spoofer0/spoofer0.github.io  
+git add .  
+git commit -m  &#34;debug&#34;  
+git push origin main  
+</code></pre>
+</div>
+
+
+    </main>
+
+    
+      
+    
+  </body>
+</html>
