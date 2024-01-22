@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>markdown on 不满是向上的车轮</title>
+    <link>https://spoofer0.github.io/tags/markdown/</link>
+    <description>Recent content in markdown on 不满是向上的车轮</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 22 Jan 2024 13:26:14 +0800</lastBuildDate>
+    <atom:link href="https://spoofer0.github.io/tags/markdown/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MD语法</title>
+      <link>https://spoofer0.github.io/md%E8%AF%AD%E6%B3%95/</link>
+      <pubDate>Mon, 22 Jan 2024 13:26:14 +0800</pubDate>
+      <guid>https://spoofer0.github.io/md%E8%AF%AD%E6%B3%95/</guid>
+      <description>标题&#xA;# h1 标题 ## h2 标题 ### h3 标题 #### h4 标题 ##### h5 标题 ###### h6 标题 图片&#xA;![](/img/AAA.png &amp;#34;The Stormtroopocat&amp;#34;) #路径为/static/img/AAA.png 链接&#xA;&amp;lt;https://assemble.io&amp;gt; &amp;lt;contact@revolunet.com&amp;gt; [Assemble](https://assemble.io) 文字格式&#xA;_TEXT_ 斜体 __TEXT__ 加粗 ~~TEXT~~ 删除线 ___ / --- / *** 分割线 &amp;gt; **NAME** TEXT 引用 &amp;lt;p&amp;gt;&amp;lt;/p&amp;gt; &amp;lt;!-- 注释 --&amp;gt; 表&#xA;* / - / + 无序表 1. 有序表 检查表 - [x] todo1 - [ ] todo2 缩进代码&#xA;// Some comments line 1 of code line 2 of code line 3 of code 表格</description>
+    </item>
+  </channel>
+</rss>

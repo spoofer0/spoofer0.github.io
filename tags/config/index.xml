@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>config on 不满是向上的车轮</title>
+    <link>https://spoofer0.github.io/tags/config/</link>
+    <description>Recent content in config on 不满是向上的车轮</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 16 Jan 2024 10:31:06 +0800</lastBuildDate>
+    <atom:link href="https://spoofer0.github.io/tags/config/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>如何快速搭建静态博客</title>
+      <link>https://spoofer0.github.io/%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2/</link>
+      <pubDate>Tue, 16 Jan 2024 10:31:06 +0800</pubDate>
+      <guid>https://spoofer0.github.io/%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2/</guid>
+      <description>安装hugo install hugo hugo version hugo new site blog-demo 下载主题 cd blog-demo git clone git@github.com:colorchestra/smol.git themes/smol cd themes/smol rm -rf .git 配置 hugo.toml&#xA;baseURL = &amp;#39;https://spoofer0.github.io/&amp;#39;&#xD;languageCode = &amp;#39;zh-cn&amp;#39; #en-us&#xD;defaultContentLanguage = &amp;#39;zh-cn&amp;#39;&#xD;theme = &amp;#34;hyde&amp;#34;&#xD;title = &amp;#39;不满是向上的车轮&amp;#39;&#xD;paginate = 10&#xD;ignoreErrors = [&amp;#34;error-remote-getjson&amp;#34;, &amp;#34;error-missing-instagram-accesstoken&amp;#34;]&#xD;[author]&#xD;name = &amp;#34;spoofer0&amp;#34;&#xD;# Menu config&#xD;# 菜单配置&#xD;[menu]&#xD;[[menu.main]]&#xD;weight = 1&#xD;identifier = &amp;#34;posts&amp;#34; pre = &amp;#34;&amp;#34; post = &amp;#34;&amp;#34;&#xD;name = &amp;#34;Posts&amp;#34;&#xD;url = &amp;#34;/posts/&amp;#34; title = &amp;#34;&amp;#34;&#xD;[[menu.</description>
+    </item>
+  </channel>
+</rss>
