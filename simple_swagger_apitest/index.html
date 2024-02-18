@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn" lang="zh-cn">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.121.2">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>swagger接口测试 &middot; 不满是向上的车轮</title>
+  <meta name="description" content="swagger-api简易批量未授权访问测试脚本" />
+
+  
+  <link type="text/css" rel="stylesheet" href="https://spoofer0.github.io/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="https://spoofer0.github.io/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="https://spoofer0.github.io/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="https://spoofer0.github.io/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class="theme-base-0f layout-reverse">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://spoofer0.github.io/"><h1>不满是向上的车轮</h1></a>
+      <p class="lead">
+       can can need 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="https://spoofer0.github.io/">Home</a> </li>
+        <li><a href="/posts/"> Posts </a></li><li><a href="/tags/"> Tags </a></li>
+      </ul>
+    </nav>
+
+    <p>&copy; 2024. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>swagger接口测试</h1>
+  <time datetime=2024-02-18T10:49:23&#43;0800 class="post-date">2024/2/18 10:49:23, Sun</time>
+   
+  <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> json
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> string
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span>requests<span style="color:#f92672">.</span>packages<span style="color:#f92672">.</span>urllib3<span style="color:#f92672">.</span>disable_warnings()
+</span></span><span style="display:flex;"><span>session <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>Session()
+</span></span><span style="display:flex;"><span>session<span style="color:#f92672">.</span>trust_env <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">load_swagger_json</span>(file_path):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">with</span> open(file_path, <span style="color:#e6db74">&#39;r&#39;</span>, encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;utf-8&#39;</span>) <span style="color:#66d9ef">as</span> file:
+</span></span><span style="display:flex;"><span>        swagger_data <span style="color:#f92672">=</span> json<span style="color:#f92672">.</span>load(file)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> swagger_data
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">extract_endpoints</span>(swagger_data):
+</span></span><span style="display:flex;"><span>    paths <span style="color:#f92672">=</span> swagger_data<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;paths&#39;</span>, {})
+</span></span><span style="display:flex;"><span>    endpoints <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> path, methods <span style="color:#f92672">in</span> paths<span style="color:#f92672">.</span>items():
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> method, details <span style="color:#f92672">in</span> methods<span style="color:#f92672">.</span>items():
+</span></span><span style="display:flex;"><span>            endpoint <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#39;path&#39;</span>: path,
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#39;method&#39;</span>: method<span style="color:#f92672">.</span>upper(),
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#39;operationId&#39;</span>: details<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;operationId&#39;</span>, <span style="color:#e6db74">&#39;&#39;</span>),
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#39;parameters&#39;</span>: details<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;parameters&#39;</span>, [])
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            endpoints<span style="color:#f92672">.</span>append(endpoint)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> endpoints
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">replace_path_parameters</span>(path, parameters):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> param <span style="color:#f92672">in</span> parameters:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> param[<span style="color:#e6db74">&#39;in&#39;</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;path&#39;</span>:
+</span></span><span style="display:flex;"><span>            path <span style="color:#f92672">=</span> path<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">{{</span><span style="color:#e6db74">{</span>param[<span style="color:#e6db74">&#39;name&#39;</span>]<span style="color:#e6db74">}</span><span style="color:#ae81ff">}}</span><span style="color:#e6db74">&#34;</span>, str(param<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;default&#39;</span>, <span style="color:#e6db74">&#39;&#39;</span>)))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> path
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_random_string</span>(length):
+</span></span><span style="display:flex;"><span>    letters <span style="color:#f92672">=</span> string<span style="color:#f92672">.</span>ascii_letters
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">.</span>join(random<span style="color:#f92672">.</span>choice(letters) <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(length))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_random_data</span>(schema):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;type&#39;</span> <span style="color:#f92672">in</span> schema:
+</span></span><span style="display:flex;"><span>        param_type <span style="color:#f92672">=</span> schema[<span style="color:#e6db74">&#39;type&#39;</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> param_type <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;string&#39;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;format&#39;</span> <span style="color:#f92672">in</span> schema <span style="color:#f92672">and</span> schema[<span style="color:#e6db74">&#39;format&#39;</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;uuid&#39;</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> str(uuid<span style="color:#f92672">.</span>uuid4())
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> generate_random_string(<span style="color:#ae81ff">10</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> param_type <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;integer&#39;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">100</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Add more cases for other data types as needed</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">execute_requests</span>(base_url, endpoint, proxy<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+</span></span><span style="display:flex;"><span>    path <span style="color:#f92672">=</span> replace_path_parameters(endpoint[<span style="color:#e6db74">&#39;path&#39;</span>], endpoint[<span style="color:#e6db74">&#39;parameters&#39;</span>])
+</span></span><span style="display:flex;"><span>    url <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>base_url<span style="color:#e6db74">}{</span>path<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>    method <span style="color:#f92672">=</span> endpoint[<span style="color:#e6db74">&#39;method&#39;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Assuming you have additional headers or parameters in your Swagger file</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># You may need to customize this part based on your Swagger specification</span>
+</span></span><span style="display:flex;"><span>    headers <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;Content-Type&#39;</span>: <span style="color:#e6db74">&#39;application/json&#39;</span>,
+</span></span><span style="display:flex;"><span>               <span style="color:#e6db74">&#39;User-Agent&#39;</span>:<span style="color:#e6db74">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36&#39;</span>}  <span style="color:#75715e"># Modify based on your headers</span>
+</span></span><span style="display:flex;"><span>    params <span style="color:#f92672">=</span> {}  <span style="color:#75715e"># Modify based on your query parameters</span>
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> {}  <span style="color:#75715e"># Modify based on your request body</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> param <span style="color:#f92672">in</span> endpoint[<span style="color:#e6db74">&#39;parameters&#39;</span>]:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> param[<span style="color:#e6db74">&#39;in&#39;</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;header&#39;</span>:
+</span></span><span style="display:flex;"><span>            headers[param[<span style="color:#e6db74">&#39;name&#39;</span>]] <span style="color:#f92672">=</span> param<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;default&#39;</span>, <span style="color:#e6db74">&#39;&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> param[<span style="color:#e6db74">&#39;in&#39;</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;query&#39;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;schema&#39;</span> <span style="color:#f92672">in</span> param:
+</span></span><span style="display:flex;"><span>                params[param[<span style="color:#e6db74">&#39;name&#39;</span>]] <span style="color:#f92672">=</span> generate_random_data(param[<span style="color:#e6db74">&#39;schema&#39;</span>])
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> param[<span style="color:#e6db74">&#39;in&#39;</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;body&#39;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;schema&#39;</span> <span style="color:#f92672">in</span> param:
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># Modify based on your request body structure</span>
+</span></span><span style="display:flex;"><span>                data <span style="color:#f92672">=</span> generate_random_data(param[<span style="color:#e6db74">&#39;schema&#39;</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Make the request with proxy if provided</span>
+</span></span><span style="display:flex;"><span>    proxies <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;http&#39;</span>: proxy, <span style="color:#e6db74">&#39;https&#39;</span>: proxy} <span style="color:#66d9ef">if</span> proxy <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>    response <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span>request(method, url, headers<span style="color:#f92672">=</span>headers, params<span style="color:#f92672">=</span>params, json<span style="color:#f92672">=</span>data, proxies<span style="color:#f92672">=</span>proxies , verify<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Endpoint: </span><span style="color:#e6db74">{</span>path<span style="color:#e6db74">}</span><span style="color:#e6db74"> - Method: </span><span style="color:#e6db74">{</span>method<span style="color:#e6db74">}</span><span style="color:#e6db74"> - Status Code: </span><span style="color:#e6db74">{</span>response<span style="color:#f92672">.</span>status_code<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    swagger_file_path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;path/to/your/swagger.json&#39;</span>
+</span></span><span style="display:flex;"><span>    base_url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;https://api.example.com&#39;</span>  <span style="color:#75715e"># Replace with your API base URL</span>
+</span></span><span style="display:flex;"><span>    proxy_url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://your.proxy.server:port&#39;</span>  <span style="color:#75715e"># Replace with your proxy URL, or None if no proxy is needed</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    swagger_data <span style="color:#f92672">=</span> load_swagger_json(swagger_file_path)
+</span></span><span style="display:flex;"><span>    endpoints <span style="color:#f92672">=</span> extract_endpoints(swagger_data)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> endpoint <span style="color:#f92672">in</span> endpoints:
+</span></span><span style="display:flex;"><span>        execute_requests(base_url, endpoint, proxy<span style="color:#f92672">=</span>proxy_url)
+</span></span></code></pre></div>
+</div>
+
+
+    </main>
+
+    
+      
+    
+  </body>
+</html>
