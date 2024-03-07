@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn" lang="zh-cn">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.121.2">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>PK ZIP已知明文攻击 &middot; 不满是向上的车轮</title>
+  <meta name="description" content="主要为CTF中的已知明文攻击" />
+
+  
+  <link type="text/css" rel="stylesheet" href="https://spoofer0.github.io/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="https://spoofer0.github.io/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="https://spoofer0.github.io/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="https://spoofer0.github.io/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class="theme-base-0f layout-reverse">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://spoofer0.github.io/"><h1>不满是向上的车轮</h1></a>
+      <p class="lead">
+       can can need 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="https://spoofer0.github.io/">Home</a> </li>
+        <li><a href="/posts/"> Posts </a></li><li><a href="/tags/"> Tags </a></li>
+      </ul>
+    </nav>
+
+    <p>&copy; 2024. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>PK ZIP已知明文攻击</h1>
+  <time datetime=2024-03-07T10:42:26&#43;0800 class="post-date">2024/3/7 10:42:26, Thu</time>
+   
+  <h3 id="使用条件">使用条件</h3>
+<p>前提：加密算法是 ZipCrypto</p>
+<ul>
+<li>知道压缩包中任何一个文件的内容。</li>
+<li>甚至不需要知道完整的文件内容，只需要知道其中的任意 12 个字节（其中 8 个字节必须连续）即可。(Store)</li>
+</ul>
+<p>例：</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708846761623-8eea03d4-1b59-4119-a67d-f7ce6466c602.png#averageHue=%23ebebeb&amp;clientId=u8317943b-f61b-4&amp;from=paste&amp;height=575&amp;id=u1a9774d3&amp;originHeight=575&amp;originWidth=630&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=32314&amp;status=done&amp;style=none&amp;taskId=ue2556020-6ca0-43c6-98c8-3fae249d361&amp;title=&amp;width=630" alt="image.png">
+<img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708846778654-366e460a-b248-4a77-8311-4719cd08f1d0.png#averageHue=%23ececeb&amp;clientId=u8317943b-f61b-4&amp;from=paste&amp;height=575&amp;id=u59ca7c26&amp;originHeight=575&amp;originWidth=630&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=28312&amp;status=done&amp;style=none&amp;taskId=ude6452c4-00ff-48e5-9205-684bfa3d7d3&amp;title=&amp;width=630" alt="image.png"></p>
+<p>winrar、7z 默认使用 AES256
+360压缩、2345好压 默认使用 ZipCrypto</p>
+<blockquote>
+<p>压缩格式：zip、7z、xz、gzip、tar<br>
+压缩等级：0、1、3、5、7、9<br>
+压缩方法：Deflate、Deflate64、Bzip2、LZMA<br>
+加密算法：ZipCrypto、AES-256</p>
+</blockquote>
+<h3 id="题目中已知明文攻击使用">题目中已知明文攻击使用</h3>
+<h4 id="1查看压缩包信息">1、查看压缩包信息</h4>
+<p><code>zipinfo crypto.zip</code>
+<code>bkcrack -L crypto.zip</code></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708848310138-18b7672c-c5de-4fc9-a6e0-82538586a7a7.png#averageHue=%230e0907&amp;clientId=u8317943b-f61b-4&amp;from=paste&amp;height=200&amp;id=ua94a2e4d&amp;originHeight=200&amp;originWidth=925&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=20101&amp;status=done&amp;style=none&amp;taskId=u201b7906-671a-4a3b-b4b6-65713e65b54&amp;title=&amp;width=925" alt="image.png"></p>
+<h4 id="2一般形式明文攻击">2、一般形式明文攻击</h4>
+<p>已知明文信息<br>
+<code>bkcrack -C crypto.zip -c 123.txt -p 123</code><br>
+<code>bkcrack -C crypto.zip -c 123.txt -p 123 </code></p>
+<blockquote>
+<p>“明文” 是指压缩后、加密前的内容，该压缩包恰好使用了 “仅存储”（Store）的压缩方式，所以明文就是文件的内容。</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#提出压缩包内任意文件</span>
+</span></span><span style="display:flex;"><span>bkcrack <span style="color:#f92672">-</span>C crypto<span style="color:#f92672">.</span>zip <span style="color:#f92672">-</span>c <span style="color:#ae81ff">123.</span>pcap <span style="color:#f92672">-</span>k da3cda9d <span style="color:#ae81ff">4</span>cbfcb95 cfaa7211  <span style="color:#f92672">-</span>d  <span style="color:#ae81ff">456.</span>pcap
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#如果是压缩后的文件</span>
+</span></span><span style="display:flex;"><span>bkcrack <span style="color:#f92672">-</span>C secrets<span style="color:#f92672">.</span>zip <span style="color:#f92672">-</span>c <span style="color:#ae81ff">123.</span>pcap <span style="color:#f92672">-</span>k da3cda9d <span style="color:#ae81ff">4</span>cbfcb95 cfaa7211 <span style="color:#f92672">-</span>d <span style="color:#ae81ff">456.</span>pcap<span style="color:#f92672">.</span>deflate
+</span></span><span style="display:flex;"><span>python3 tools<span style="color:#f92672">/</span>inflate<span style="color:#f92672">.</span>py <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">456.</span>pcap<span style="color:#f92672">.</span>deflate <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">456.</span>pcap
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#重置压缩包密码</span>
+</span></span><span style="display:flex;"><span> bkcrack <span style="color:#f92672">-</span>C crypto<span style="color:#f92672">.</span>zip <span style="color:#f92672">-</span>k da3cda9d <span style="color:#ae81ff">4</span>cbfcb95 cfaa7211 <span style="color:#f92672">-</span>U secrets_with_new_password<span style="color:#f92672">.</span>zip <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#尝试获取原密码</span>
+</span></span><span style="display:flex;"><span>bkcrack <span style="color:#f92672">-</span>k da3cda9d <span style="color:#ae81ff">4</span>cbfcb95 cfaa7211 <span style="color:#f92672">--</span>recover<span style="color:#f92672">-</span>password <span style="color:#ae81ff">10</span> <span style="color:#960050;background-color:#1e0010">?</span>p
+</span></span><span style="display:flex;"><span>bkcrack <span style="color:#f92672">-</span>k da3cda9d <span style="color:#ae81ff">4</span>cbfcb95 cfaa7211 <span style="color:#f92672">--</span>bruteforce <span style="color:#960050;background-color:#1e0010">?</span>b <span style="color:#f92672">--</span>length <span style="color:#ae81ff">0..9</span>
+</span></span></code></pre></div><p><img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708847870509-03b3c897-d6f6-46b7-9d32-a8a978200f0b.png#averageHue=%230d0a07&amp;clientId=u8317943b-f61b-4&amp;from=paste&amp;height=185&amp;id=uc12a155d&amp;originHeight=185&amp;originWidth=788&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=19080&amp;status=done&amp;style=none&amp;taskId=ucea249cf-d147-405d-9344-cec8acd61dc&amp;title=&amp;width=788" alt="image.png"></p>
+<h5 id="例题">例题：</h5>
+<h6 id="challenge1">challenge1</h6>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708848758852-e6f33258-a87a-4445-8a38-0bc85e34a8f2.png#averageHue=%230c0908&amp;clientId=u8317943b-f61b-4&amp;from=paste&amp;height=165&amp;id=u16e212d7&amp;originHeight=165&amp;originWidth=987&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=17234&amp;status=done&amp;style=none&amp;taskId=u68ec8346-f772-440d-b134-a5b903d97d5&amp;title=&amp;width=987" alt="image.png">
+<img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708848984477-bbc21b07-45b9-4554-bdbc-33651e04edce.png#averageHue=%23fbf8f6&amp;clientId=u8317943b-f61b-4&amp;from=paste&amp;height=372&amp;id=u23bdf30b&amp;originHeight=372&amp;originWidth=875&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=74423&amp;status=done&amp;style=none&amp;taskId=u090e62e0-7cfe-4dc0-8500-e8c3cf97c1a&amp;title=&amp;width=875" alt="image.png">
+<code>bkcrack -C challenge_1.zip -c chromedriver_linux64.zip -p chromedriver_linux64.zip -U cha1_dec.zip &quot;&quot;</code>   密码置空</p>
+<h6 id="challenge2">challenge2</h6>
+<p><img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708849629364-ef9056b1-1d6a-49a2-a860-d5e4702f9a35.png#averageHue=%230d0a08&amp;clientId=u8317943b-f61b-4&amp;from=paste&amp;height=145&amp;id=ue1238841&amp;originHeight=145&amp;originWidth=897&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=13901&amp;status=done&amp;style=none&amp;taskId=ud6e5b257-716b-46bd-b28d-edbe36bc256&amp;title=&amp;width=897" alt="image.png"></p>
+<p><code>.pcapng</code> 格式文件
+pcapng 的开头部分是一个叫 Section Header Block 的数据结构：
+<img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708399269332-9fc63f56-c60e-425b-b9a2-c0bd3d4ca752.png#averageHue=%23a9cc64&amp;clientId=u32379adc-a160-4&amp;from=paste&amp;height=705&amp;id=ajsbF&amp;originHeight=705&amp;originWidth=1113&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=275571&amp;status=done&amp;style=none&amp;taskId=ud66cd203-6ebd-4b59-b13a-951dd11a016&amp;title=&amp;width=1113" alt="image.png"></p>
+<ul>
+<li>首先四个字节是 0a0d0d0a，是一定已知的。</li>
+<li>后面的四个字节表示 SHB 的大小。这个数字可能是大端也可能是小端，计算机处理中一般为小端，而且考虑到 SHB 里面记录的信息不多，一般不会超过 255 字节，再怎么说也不会超过 65535 个字节，所以后面两个字节大概是 0000。</li>
+<li>然后四个字节表示端序。前面已经说了，目前的电脑都是小端，所以它的值一定是 4d3c2b1a。就算你不信这一点，也可以拿大端再试试，无非就是尝试两次。</li>
+<li>再后面四个字节表示版本号，一定是 01000000。</li>
+<li>接下来八个字节表示整个文件的长度，实际上大多数抓包软件都会直接设置为 表示不指定文件长度（道理很好懂：抓包软件可能会流式存储 pcapng 文件，它写文件头的时候抓包还在进行，无法知道这里应该填多少），但严格来说我们无法肯定这一点。</li>
+</ul>
+<p>好的，到这一步我们已经能够肯定文件头一定是 <code>0a0d0d0a____00004d3c2b1a01000000</code>，有 14 个字节，其中 10 个字节连续。
+<code>bkcrack -C challenge_2.zip -c flag2.pcapng -p pcap_header.bin -o 6 -x 0 0a0d0d0a -U challenge_2_dec.zip &quot;&quot;</code>
+（其中 pcap_header.bin 存储的内容如下：）
+<a href="https://github.com/PKU-GeekGame/geekgame-3rd/blob/master/official_writeup/prob24-password/assets/image-20231021044234738.png"><img src="https://github.com/PKU-GeekGame/geekgame-3rd/raw/master/official_writeup/prob24-password/assets/image-20231021044234738.png#from=url&amp;id=zZ3n7&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;status=done&amp;style=none&amp;title=" alt=""></a><img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708851284169-d8198d4d-954f-4d6d-8a59-369bd3c9d07a.png#averageHue=%23312f2b&amp;clientId=u8317943b-f61b-4&amp;from=paste&amp;height=97&amp;id=ua1f7691f&amp;originHeight=97&amp;originWidth=603&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=5327&amp;status=done&amp;style=none&amp;taskId=ue70d1675-8794-4ad3-9122-e6c3c1f047f&amp;title=&amp;width=603" alt="image.png"><br>
+如果大胆猜测了文件长度字段是 <code>ffffffffffffffff</code>，它会跑得更快一些。</p>
+<h3 id="实战中已知明文攻击使用">实战中已知明文攻击使用</h3>
+<h4 id="当有文件仅存储时通过扩展名推测明文">当有文件仅存储时，通过扩展名推测明文</h4>
+<p>.svg  .xml  文件  开头为<code>&lt;?xml version=&quot;1.0&quot;</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>echo <span style="color:#f92672">-</span>n <span style="color:#e6db74">&#39;&lt;?xml version=&#34;1.0&#34; &#39;</span> <span style="color:#f92672">&gt;</span> plain<span style="color:#f92672">.</span>txt
+</span></span><span style="display:flex;"><span>bkcrack <span style="color:#f92672">-</span>C secrets<span style="color:#f92672">.</span>zip <span style="color:#f92672">-</span>c spiral<span style="color:#f92672">.</span>svg <span style="color:#f92672">-</span>p plain<span style="color:#f92672">.</span>txt
+</span></span></code></pre></div><p><code>.pcapng</code>文件</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>bkcrack <span style="color:#f92672">-</span>C challenge_2<span style="color:#f92672">.</span>zip <span style="color:#f92672">-</span>c flag2<span style="color:#f92672">.</span>pcapng <span style="color:#f92672">-</span>p pcap_header<span style="color:#f92672">.</span>bin <span style="color:#f92672">-</span>o <span style="color:#ae81ff">6</span> <span style="color:#f92672">-</span>x <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>a0d0d0a <span style="color:#f92672">-</span>U challenge_2_dec<span style="color:#f92672">.</span>zip <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  pcap_header.bin  = 00004d3c2b1a01000000  or 00004d3c2b1a01000000ffffffffffffffff</span>
+</span></span></code></pre></div><p><code>.png</code>文件</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>echo <span style="color:#ae81ff">89504E470</span>D0A1A0A0000000D49484452 <span style="color:#f92672">|</span> xxd <span style="color:#f92672">-</span>r <span style="color:#f92672">-</span>ps <span style="color:#f92672">&gt;</span> png_header
+</span></span><span style="display:flex;"><span>bkcrack <span style="color:#f92672">-</span>C png4<span style="color:#f92672">.</span>zip <span style="color:#f92672">-</span>c <span style="color:#ae81ff">2.</span>png <span style="color:#f92672">-</span>p png_header <span style="color:#f92672">-</span>o <span style="color:#ae81ff">0</span>
+</span></span></code></pre></div><p><code>.zip</code> 文件
+ZIP文件会包含其中文件名，知道或可以猜测该压缩包内的文件名称
+<strong>一般来说，单个文件打包成zip压缩文件时，压缩包名默认为文件名，且偏移值固定为30byte。</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>echo <span style="color:#f92672">-</span>n <span style="color:#e6db74">&#34;flag.txt&#34;</span> <span style="color:#f92672">&gt;</span> plain1<span style="color:#f92672">.</span>txt
+</span></span><span style="display:flex;"><span>bkcrack <span style="color:#f92672">-</span>C test5<span style="color:#f92672">.</span>zip <span style="color:#f92672">-</span>c flag<span style="color:#f92672">.</span>zip <span style="color:#f92672">-</span>p plain1<span style="color:#f92672">.</span>txt <span style="color:#f92672">-</span>o <span style="color:#ae81ff">30</span>  <span style="color:#f92672">-</span>x <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">504</span>B0304 <span style="color:#f92672">&gt;</span><span style="color:#ae81ff">1.</span>log
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>bkcrack  <span style="color:#f92672">-</span>C <span style="color:#ae81ff">20240103</span>BBB<span style="color:#f92672">.</span>zip <span style="color:#f92672">-</span>c <span style="color:#ae81ff">20240103</span>AAA<span style="color:#f92672">.</span>zip <span style="color:#f92672">-</span>p head<span style="color:#f92672">.</span>bin <span style="color:#f92672">-</span>o <span style="color:#ae81ff">30</span> <span style="color:#f92672">-</span>x <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">504</span>B0304 <span style="color:#f92672">&gt;</span><span style="color:#ae81ff">2.</span>log
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#f92672">-</span>n <span style="color:#f92672">-</span>e <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xf6</span><span style="color:#e6db74">&lt;&lt;&lt; Oracle VM VirtualBox Disk Image &gt;&gt;&gt;&#34;</span> <span style="color:#f92672">&gt;</span> plain<span style="color:#f92672">.</span>txt
+</span></span><span style="display:flex;"><span>bkcrack <span style="color:#f92672">-</span>C Challange<span style="color:#f92672">.</span>zip <span style="color:#f92672">-</span>c oracle<span style="color:#f92672">.</span>vdi <span style="color:#f92672">-</span>p plain<span style="color:#f92672">.</span>txt <span style="color:#f92672">-</span>o <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><p><a href="https://pkware.cachefly.net/webdocs/APPNOTE/APPNOTE-6.3.9.TXT">https://pkware.cachefly.net/webdocs/APPNOTE/APPNOTE-6.3.9.TXT</a>
+压缩包在存储的文件数据之前添加了一个12字节的加密标头，加密标头的最后一个字节是文件CRC值的最高位字节
+<img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708861002920-8846960f-bc35-44ba-bad3-d44c042932fc.png#averageHue=%23221f1c&amp;clientId=u8317943b-f61b-4&amp;from=paste&amp;height=360&amp;id=uda17a432&amp;originHeight=360&amp;originWidth=1476&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=67758&amp;status=done&amp;style=none&amp;taskId=u06fa9469-c3c3-44a9-8720-35fb445d096&amp;title=&amp;width=1476" alt="image.png"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>Signature<span style="color:#960050;background-color:#1e0010">（</span>标志<span style="color:#960050;background-color:#1e0010">）：</span><span style="color:#ae81ff">4</span>个字节<span style="color:#960050;background-color:#1e0010">，</span>表示局部文件头的标志<span style="color:#960050;background-color:#1e0010">。</span>对于非加密文件<span style="color:#960050;background-color:#1e0010">，</span>这个值为 <span style="color:#ae81ff">0x04034b50</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>Version Needed To Extract<span style="color:#960050;background-color:#1e0010">（</span>需要解压的版本<span style="color:#960050;background-color:#1e0010">）：</span><span style="color:#ae81ff">2</span>个字节<span style="color:#960050;background-color:#1e0010">，</span>表示解压所需的最低ZIP规范版本<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>General Purpose Bit Flag<span style="color:#960050;background-color:#1e0010">（</span>通用位标志<span style="color:#960050;background-color:#1e0010">）：</span><span style="color:#ae81ff">2</span>个字节<span style="color:#960050;background-color:#1e0010">，</span>包含一些通用标志<span style="color:#960050;background-color:#1e0010">，</span>其中第13位<span style="color:#960050;background-color:#1e0010">（</span>从右向左数<span style="color:#960050;background-color:#1e0010">）</span>表示是否使用了加密<span style="color:#960050;background-color:#1e0010">。</span>如果加密<span style="color:#960050;background-color:#1e0010">，</span>则这个位的值为1<span style="color:#960050;background-color:#1e0010">，</span>否则为0<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>Compression Method<span style="color:#960050;background-color:#1e0010">（</span>压缩方法<span style="color:#960050;background-color:#1e0010">）：</span><span style="color:#ae81ff">2</span>个字节<span style="color:#960050;background-color:#1e0010">，</span>表示文件的压缩方法<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>Last Mod File Time<span style="color:#960050;background-color:#1e0010">（</span>最后修改文件时间<span style="color:#960050;background-color:#1e0010">）：</span><span style="color:#ae81ff">2</span>个字节<span style="color:#960050;background-color:#1e0010">，</span>表示文件最后修改的时间<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>Last Mod File Date<span style="color:#960050;background-color:#1e0010">（</span>最后修改文件日期<span style="color:#960050;background-color:#1e0010">）：</span><span style="color:#ae81ff">2</span>个字节<span style="color:#960050;background-color:#1e0010">，</span>表示文件最后修改的日期<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>CRC<span style="color:#f92672">-</span><span style="color:#ae81ff">32</span><span style="color:#960050;background-color:#1e0010">（</span>CRC校验值<span style="color:#960050;background-color:#1e0010">）：</span><span style="color:#ae81ff">4</span>个字节<span style="color:#960050;background-color:#1e0010">，</span>表示文件内容的CRC<span style="color:#f92672">-</span><span style="color:#ae81ff">32</span>校验值<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>Compressed Size<span style="color:#960050;background-color:#1e0010">（</span>压缩后的大小<span style="color:#960050;background-color:#1e0010">）：</span><span style="color:#ae81ff">4</span>个字节<span style="color:#960050;background-color:#1e0010">，</span>表示文件压缩后的大小<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>Uncompressed Size<span style="color:#960050;background-color:#1e0010">（</span>未压缩的大小<span style="color:#960050;background-color:#1e0010">）：</span><span style="color:#ae81ff">4</span>个字节<span style="color:#960050;background-color:#1e0010">，</span>表示文件未压缩时的大小<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>Filename Length<span style="color:#960050;background-color:#1e0010">（</span>文件名长度<span style="color:#960050;background-color:#1e0010">）：</span><span style="color:#ae81ff">2</span>个字节<span style="color:#960050;background-color:#1e0010">，</span>表示文件名的长度<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>Extra Field Length<span style="color:#960050;background-color:#1e0010">（</span>额外字段长度<span style="color:#960050;background-color:#1e0010">）：</span><span style="color:#ae81ff">2</span>个字节<span style="color:#960050;background-color:#1e0010">，</span>表示额外字段的长度<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>Encrypted Data<span style="color:#960050;background-color:#1e0010">（</span>加密数据<span style="color:#960050;background-color:#1e0010">）：</span><span style="color:#ae81ff">12</span>个字节<span style="color:#960050;background-color:#1e0010">，</span>只有在通用位标志中的第13位为1时<span style="color:#960050;background-color:#1e0010">，</span>才存在加密数据<span style="color:#960050;background-color:#1e0010">。</span>这12个字节包含加密算法标识符和加密所需的一些信息<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h4 id="通过压缩过的文件进行明文攻击">通过压缩过的文件进行明文攻击</h4>
+<p>条件： 适用于全部文件都已经压缩过，需要找到其中一个原始文件。
+步骤：</p>
+<ul>
+<li>压缩文件</li>
+<li>进行明文攻击</li>
+<li>寻找zip压缩率</li>
+<li>测试不同压缩软件</li>
+</ul>
+<p>先压缩文件
+<code>zip -5 deflate_jpg.zip origin.jpg</code>
+直接明文攻击可能失败
+<code>bkcrack -C secrets.zip -c secrets.jpg -P deflate_jpg.zip -p origin.jpg</code>
+寻找zip不同压缩等级
+<img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708910897779-662c9093-ed78-40a1-94cd-e0f9ad2da37e.png#averageHue=%230c0908&amp;clientId=u5107b1cc-3a32-4&amp;from=paste&amp;height=335&amp;id=udacab23c&amp;originHeight=335&amp;originWidth=897&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=31526&amp;status=done&amp;style=none&amp;taskId=u1a87de21-d044-41fe-9170-c47a57273c6&amp;title=&amp;width=897" alt="image.png">
+<img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708911343856-6338e943-221e-4080-b362-6d69528a477b.png#averageHue=%23090706&amp;clientId=u5107b1cc-3a32-4&amp;from=paste&amp;height=163&amp;id=ue8b1c3d0&amp;originHeight=163&amp;originWidth=1215&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=19586&amp;status=done&amp;style=none&amp;taskId=u5ac65798-d614-4aa8-ad28-e0b32579450&amp;title=&amp;width=1215" alt="image.png">
+<img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708911359806-a8253c40-cd81-4e99-90a4-4ddc4f44eef9.png#averageHue=%23090705&amp;clientId=u5107b1cc-3a32-4&amp;from=paste&amp;height=255&amp;id=uc096621d&amp;originHeight=255&amp;originWidth=1158&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=26789&amp;status=done&amp;style=none&amp;taskId=u3b18934b-a8df-41d6-afdf-a9b7cf8743c&amp;title=&amp;width=1158" alt="image.png">
+测试不同的压缩格式</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>import os
+</span></span><span style="display:flex;"><span>import subprocess
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>def <span style="color:#a6e22e">remove_old_zip</span>(zip_filename)<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>        os.remove(zip_filename)
+</span></span><span style="display:flex;"><span>    except FileNotFoundError:
+</span></span><span style="display:flex;"><span>        pass  <span style="color:#960050;background-color:#1e0010">#</span> Ignore <span style="color:#66d9ef">if</span> the file doesn<span style="color:#960050;background-color:#1e0010">&#39;</span>t exist
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>def create_new_zip(zip_filename, level, source_file)<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    subprocess.run(f<span style="color:#e6db74">&#34;zip -</span>{level} {zip_filename} {source_file} <span style="color:#f92672">&gt;</span> <span style="color:#f92672">/</span>dev<span style="color:#f92672">/</span>null<span style="color:#e6db74">&#34;, shell=True)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>def <span style="color:#a6e22e">perform_known_plaintext_attack</span>(plaintext, compressed_filename, target_zip)<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    subprocess.run(f<span style="color:#e6db74">&#34;bkcrack -C </span>{target_zip} <span style="color:#f92672">-</span>c {compressed_filename} <span style="color:#f92672">-</span>P {compressed_filename} <span style="color:#f92672">-</span>p {plaintext}<span style="color:#e6db74">&#34;, shell=True)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    plaintext_file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;origin.jpg&#34;</span>
+</span></span><span style="display:flex;"><span>    compressed_filename <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;deflate_jpg.zip&#34;</span>
+</span></span><span style="display:flex;"><span>    target_zip <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Desktop.zip&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> level in range(<span style="color:#ae81ff">10</span>)<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>        print(f<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Level {level}:&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Remove old zip file
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        remove_old_zip(compressed_filename)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Create new zip file
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        create_new_zip(compressed_filename, level, plaintext_file)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Perform known plaintext attack
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        perform_known_plaintext_attack(plaintext_file, compressed_filename, target_zip)
+</span></span></code></pre></div><p>测试不同的压缩格式</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>import subprocess
+</span></span><span style="display:flex;"><span>import os
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>def <span style="color:#a6e22e">remove_old_zip</span>(zip_filename)<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>        os.remove(zip_filename)
+</span></span><span style="display:flex;"><span>    except FileNotFoundError:
+</span></span><span style="display:flex;"><span>        pass  <span style="color:#960050;background-color:#1e0010">#</span> Ignore <span style="color:#66d9ef">if</span> the file doesn<span style="color:#960050;background-color:#1e0010">&#39;</span>t exist
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>def create_new_zip(zip_filename, level, source_file)<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    subprocess.run(f<span style="color:#e6db74">&#34;7z a -tzip -mx</span>{level} {zip_filename} {source_file} <span style="color:#f92672">&gt;</span> <span style="color:#f92672">/</span>dev<span style="color:#f92672">/</span>null<span style="color:#e6db74">&#34;, shell=True)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>def <span style="color:#a6e22e">perform_known_plaintext_attack</span>(plaintext, compressed_filename, target_zip)<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    subprocess.run(f<span style="color:#e6db74">&#34;bkcrack -C </span>{target_zip} <span style="color:#f92672">-</span>c {compressed_filename} <span style="color:#f92672">-</span>P {compressed_filename} <span style="color:#f92672">-</span>p {plaintext}<span style="color:#e6db74">&#34;, shell=True)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    plaintext_file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;very_good_advice.jpg&#34;</span>
+</span></span><span style="display:flex;"><span>    compressed_filename <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;very_good_advice.jpg.zip&#34;</span>
+</span></span><span style="display:flex;"><span>    target_zip <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;secrets.zip&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> level in range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">10</span>)<span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>        print(f<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Level {level}:&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Remove old zip file
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        remove_old_zip(compressed_filename)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Create new zip file
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        create_new_zip(compressed_filename, level, plaintext_file)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Perform known plaintext attack
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        perform_known_plaintext_attack(plaintext_file, compressed_filename, target_zip)
+</span></span></code></pre></div><h4 id="zipcrypto">ZipCrypto</h4>
+<p>ZIP 的传统加密，本质上也是异或加密。当然，不是用 password 异或，而是用一个伪随机数流来和明文进行异或。而产生这个伪随机数流，需要用到三个 keys，下文分别以 x，y，z 代指。这三个 keys 非常重要，加密解密过程实质上只需要这三个 keys，密码的作用其实是初始化这三个 keys。简要介绍一下加密流程：在加密前，首先会用密码作为种子初始化这个伪随机数流，然后每加密一个 byte，都会用这个 byte 作为输入产生下一个伪随机数（这个随机数称为 k ）。解密过程也是差不多的，首先初始化伪随机数流，然后每解密一个 byte，都用解密后的 byte 作为输入产生下一个伪随机数。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#e6db74">/// 贯穿加密算法的三个 keys
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/// 加密/解密每个数据块时都会初始化一次 keys
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/// 拿到 keys 不一定能还原出密码，但已经足够进行加密/解密了
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Keys</span> {
+</span></span><span style="display:flex;"><span>    x: <span style="color:#66d9ef">u32</span>,
+</span></span><span style="display:flex;"><span>    y: <span style="color:#66d9ef">u32</span>,
+</span></span><span style="display:flex;"><span>    z: <span style="color:#66d9ef">u32</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">impl</span> Keys {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">/// 使用密码初始化 keys
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"></span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">new</span>(password: <span style="color:#66d9ef">&amp;</span>[<span style="color:#66d9ef">u8</span>]) -&gt; <span style="color:#a6e22e">Self</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 首先，使用三个魔术常量初始化 Keys
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// （这常量真随便
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> keys <span style="color:#f92672">=</span> Self {
+</span></span><span style="display:flex;"><span>            x: <span style="color:#ae81ff">0x1234_5678</span>,
+</span></span><span style="display:flex;"><span>            y: <span style="color:#ae81ff">0x2345_6789</span>,
+</span></span><span style="display:flex;"><span>            z: <span style="color:#ae81ff">0x3456_7890</span>,
+</span></span><span style="display:flex;"><span>        };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 然后，获取密码的字节形式，并用它们更新 Keys
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">&amp;</span>c <span style="color:#66d9ef">in</span> password {
+</span></span><span style="display:flex;"><span>            keys.update_keys(c);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        keys
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 准备工作就绪了，接下来可以用 keys 来加密//解密文件了
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">/// 加密算法最核心的部分 （超短
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"></span>    <span style="color:#e6db74">/// 在加密/解密过程中， 这个函数会被不断调用，以更新 keys
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"></span>    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">update_keys</span>(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> self, c: <span style="color:#66d9ef">u8</span>) {
+</span></span><span style="display:flex;"><span>        self.x <span style="color:#f92672">=</span> crc32(self.x, c);
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// .wrapping_xxx(), 即允许溢出的运算
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// 虽然 release 模式下默认不检查溢出，但这样写显得严谨
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        self.y <span style="color:#f92672">=</span> (self.y <span style="color:#f92672">+</span> <span style="color:#66d9ef">u32</span>::from(lsb(self.x))).wrapping_mul(<span style="color:#ae81ff">0x0808_8405</span>).wrapping_add(<span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>        self.z <span style="color:#f92672">=</span> crc32(self.z, msb(self.y));
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">/// 对外提供的解密函数
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"></span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">decrypt</span>(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> self, data: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">mut</span> [<span style="color:#66d9ef">u8</span>]) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> c <span style="color:#66d9ef">in</span> data.iter_mut() {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">let</span> p <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>c <span style="color:#f92672">^</span> self.get_k();
+</span></span><span style="display:flex;"><span>            self.update_keys(p);
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">*</span>c <span style="color:#f92672">=</span> p;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">/// 不知道这函数该叫啥。。。功能是从 keys 中计算出一个用来加密/解密的 byte
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"></span>    <span style="color:#e6db74">/// 是个实际操作中可以打表的函数
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"></span>    <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">get_k</span>(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> self) -&gt; <span style="color:#66d9ef">u8</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 标准中这里是 `| 2`， 其实效果都一样，毕竟 `2 ^ 1 == 3`, `3 ^ 1 == 2`
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// 不过写成 `| 3` 有助于后续结论的推导
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">let</span> temp <span style="color:#f92672">=</span> (self.z <span style="color:#f92672">|</span> <span style="color:#ae81ff">3</span>) <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u16</span>;
+</span></span><span style="display:flex;"><span>        lsb(((temp <span style="color:#f92672">*</span> (temp <span style="color:#f92672">^</span> <span style="color:#ae81ff">1</span>)) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">8</span>).into())
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">/// 对外提供的加密函数
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"></span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">encrypt</span>(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> self, data: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">mut</span> [<span style="color:#66d9ef">u8</span>]) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 和解密过程基本一样(毕竟异或
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> p <span style="color:#66d9ef">in</span> data.iter_mut() {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">let</span> c <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>p <span style="color:#f92672">^</span> self.get_k();
+</span></span><span style="display:flex;"><span>            self.update_keys(<span style="color:#f92672">*</span>p);
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> c;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">/// 朴实的 CRC32 函数，实际操作中一般都会打表
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">/// 其中 0xEDB8_8320 是 ZIP 标准规定魔术常量
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"></span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">crc32</span>(old_crc: <span style="color:#66d9ef">u32</span>, c: <span style="color:#66d9ef">u8</span>) -&gt; <span style="color:#66d9ef">u32</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> crc <span style="color:#f92672">=</span> old_crc <span style="color:#f92672">^</span> c <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u32</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> _ <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">..</span><span style="color:#ae81ff">8</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> crc <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>            crc <span style="color:#f92672">=</span> crc <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">^</span> <span style="color:#ae81ff">0xEDB8</span>l_8320;    
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            crc <span style="color:#f92672">=</span> crc <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    crc
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">/// 朴实的 lsb 函数，注意是最低有效字节，不是最低有效位
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"></span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">lsb</span>(x: <span style="color:#66d9ef">u32</span>) -&gt; <span style="color:#66d9ef">u8</span> {
+</span></span><span style="display:flex;"><span>    x <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">/// 朴实的 msb 函数，注意是最高有效字节，不是最高有效位
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"></span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">msb</span>(x: <span style="color:#66d9ef">u32</span>) -&gt; <span style="color:#66d9ef">u8</span> {
+</span></span><span style="display:flex;"><span>    (x <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">24</span>) <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 展示一下用法
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> keys <span style="color:#f92672">=</span> Keys::new(<span style="color:#e6db74">&#34;123456&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> data <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Illyasviel von Einzbern&#34;</span>.bytes().collect::<span style="color:#f92672">&lt;</span>Vec<span style="color:#f92672">&lt;</span>_<span style="color:#f92672">&gt;&gt;</span>();
+</span></span><span style="display:flex;"><span>    println!(<span style="color:#e6db74">&#34;加密前:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">{:?}</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span>, data, String::from_utf8_lossy(<span style="color:#f92672">&amp;</span>data));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    keys.encrypt(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> data);
+</span></span><span style="display:flex;"><span>    println!(<span style="color:#e6db74">&#34;加密后:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">{:?}</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span>, data, String::from_utf8_lossy(<span style="color:#f92672">&amp;</span>data));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 注意要重新初始化 Keys
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> keys <span style="color:#f92672">=</span> Keys::new(<span style="color:#e6db74">&#34;123456&#34;</span>);
+</span></span><span style="display:flex;"><span>    keys.decrypt(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> data);
+</span></span><span style="display:flex;"><span>    println!(<span style="color:#e6db74">&#34;解密后:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">{:?}</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span>, data, String::from_utf8_lossy(<span style="color:#f92672">&amp;</span>data));
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><a href="https://www.aloxaf.com/2019/04/zip_plaintext_attack/#%E6%98%8E%E6%96%87%E6%94%BB%E5%87%BB">https://www.aloxaf.com/2019/04/zip_plaintext_attack/#%E6%98%8E%E6%96%87%E6%94%BB%E5%87%BB</a>
+<a href="https://link.springer.com/content/pdf/10.1007/3-540-60590-8_12.pdf">https://link.springer.com/content/pdf/10.1007/3-540-60590-8_12.pdf</a></p>
+<p>要想攻击首先需要知道 ZipCrypto 的加密方式。这个加密算法是面向字节流的（而现代对称加密算法是对一个分组进行加密），它内部使用了 3 个 32 比特的整数来表示密钥，可以将它们称为 key0，key1 和 key2。通常我们在打包文件时输入的密码会被转换成这 3 个 dword。算法基本就是用一个循环来加密数据，加密函数记为 UpdateKeys，cpp 代码如下</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// p 是用来更新内部 key 的明文
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// lsb、msb 分别表示取 dword 的最低和最高字节（不是位）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> PKCipher<span style="color:#f92672">::</span>UpdateKeys(<span style="color:#66d9ef">uint8_t</span> p) {
+</span></span><span style="display:flex;"><span>    k0 <span style="color:#f92672">=</span> crc<span style="color:#f92672">::</span>Crc32(k0, p);
+</span></span><span style="display:flex;"><span>    k1 <span style="color:#f92672">=</span> (k1 <span style="color:#f92672">+</span> crc<span style="color:#f92672">::</span>lsb(k0)) <span style="color:#f92672">*</span> <span style="color:#ae81ff">134775813</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;    <span style="color:#75715e">// 134775813 是 magic number
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    k2 <span style="color:#f92672">=</span> crc<span style="color:#f92672">::</span>Crc32(k2, crc<span style="color:#f92672">::</span>msb(k1));
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">uint8_t</span> PKCipher<span style="color:#f92672">::</span>GetK3() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint16_t</span> tmp <span style="color:#f92672">=</span> k2 <span style="color:#f92672">|</span> <span style="color:#ae81ff">3</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> crc<span style="color:#f92672">::</span>lsb((tmp <span style="color:#f92672">*</span> (tmp <span style="color:#f92672">^</span> <span style="color:#ae81ff">1</span>)) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">8</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> PKCipher<span style="color:#f92672">::</span>Encrypt(std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">uint8_t</span><span style="color:#f92672">&gt;&amp;</span> data) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">uint8_t</span><span style="color:#f92672">&amp;</span> p : data) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">uint8_t</span> c <span style="color:#f92672">=</span> p <span style="color:#f92672">^</span> GetK3();
+</span></span><span style="display:flex;"><span>        UpdateKeys(p);
+</span></span><span style="display:flex;"><span>        p <span style="color:#f92672">=</span> c;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>UpdateKeys 仅仅是更新了内部 key，真正对明文进行加密用的是从 key2 派生出来的 16 比特的 key3。可以看到，不仅 key3 只有 16 比特长，它的低两位因为和 3 做了位与操作所以必然是 1，使得 key3 的取值范围缩小到 214，这就有了反推的基础。
+<a href="https://flandre-scarlet.moe/blog/1685/">https://flandre-scarlet.moe/blog/1685/</a></p>
+<h3 id="结论">结论</h3>
+<p>知道其中一个文件的明文（很常见，尤其是当压缩一些程序的时候，经常会混入一些已知的 DLL 或者 LICENSE.txt），或者知道一个以 “仅存储” 方式压缩的文件的 12 个字节（也很常见，因为 ZIP、JPEG、PNG 这种格式经常以 “仅存储” 方式压缩，而且在文件头和文件尾也很容易凑出 12 字节的已知明文，还有一种情况就是数据量大的压缩包经过两次压缩之后，就不再压缩文件，仅进行存储，所以才有机可乘。</p>
+
+</div>
+
+
+    </main>
+
+    
+      
+    
+  </body>
+</html>
