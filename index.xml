@@ -6,8 +6,15 @@
     <description>Recent content on 不满是向上的车轮</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 07 Mar 2024 10:42:26 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 20 Mar 2024 09:07:26 +0800</lastBuildDate>
     <atom:link href="https://spoofer0.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Bladex_sqli</title>
+      <link>https://spoofer0.github.io/bladex_sqli/</link>
+      <pubDate>Wed, 20 Mar 2024 09:07:26 +0800</pubDate>
+      <guid>https://spoofer0.github.io/bladex_sqli/</guid>
+      <description>https://bladex.cn/#/ Introduction :&#xA;BladeX is a well-designed microservices architecture that provides SpringCloud&amp;rsquo;s full suite of solutions.&#xA;Proof of Concept:&#xA;/api/blade-user/export-user The key value has SQL injection vulnerability.&#xA;Payload : updatexml(1,concat(0x3f,md5(123456),0x3f),1)=1&#xA;The sites developed using the BladeX architecture all have the SQL injection vulnerability at the user export interface, and sensitive information in the database can be queried through the error report of related SQL statements.&#xA;Although JWT is used to make the corresponding permission access control policy, there is still the possibility of leakage of a large amount of sensitive information in the database.</description>
+    </item>
     <item>
       <title>PK ZIP已知明文攻击</title>
       <link>https://spoofer0.github.io/pk-zip%E5%B7%B2%E7%9F%A5%E6%98%8E%E6%96%87%E6%94%BB%E5%87%BB/</link>
