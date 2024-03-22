@@ -60,8 +60,8 @@
 <li>甚至不需要知道完整的文件内容，只需要知道其中的任意 12 个字节（其中 8 个字节必须连续）即可。(Store)</li>
 </ul>
 <p>例：</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708846761623-8eea03d4-1b59-4119-a67d-f7ce6466c602.png#averageHue=%23ebebeb&amp;clientId=u8317943b-f61b-4&amp;from=paste&amp;height=575&amp;id=u1a9774d3&amp;originHeight=575&amp;originWidth=630&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=32314&amp;status=done&amp;style=none&amp;taskId=ue2556020-6ca0-43c6-98c8-3fae249d361&amp;title=&amp;width=630" alt="image.png">
-<img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708846778654-366e460a-b248-4a77-8311-4719cd08f1d0.png#averageHue=%23ececeb&amp;clientId=u8317943b-f61b-4&amp;from=paste&amp;height=575&amp;id=u59ca7c26&amp;originHeight=575&amp;originWidth=630&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=28312&amp;status=done&amp;style=none&amp;taskId=ude6452c4-00ff-48e5-9205-684bfa3d7d3&amp;title=&amp;width=630" alt="image.png"></p>
+<p><img src="/img/image-10.png" alt="alt text">
+<img src="/img/image-11.png" alt="alt text"></p>
 <p>winrar、7z 默认使用 AES256
 360压缩、2345好压 默认使用 ZipCrypto</p>
 <blockquote>
@@ -74,7 +74,7 @@
 <h4 id="1查看压缩包信息">1、查看压缩包信息</h4>
 <p><code>zipinfo crypto.zip</code>
 <code>bkcrack -L crypto.zip</code></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708848310138-18b7672c-c5de-4fc9-a6e0-82538586a7a7.png#averageHue=%230e0907&amp;clientId=u8317943b-f61b-4&amp;from=paste&amp;height=200&amp;id=ua94a2e4d&amp;originHeight=200&amp;originWidth=925&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=20101&amp;status=done&amp;style=none&amp;taskId=u201b7906-671a-4a3b-b4b6-65713e65b54&amp;title=&amp;width=925" alt="image.png"></p>
+<p><img src="/img/image-12.png" alt="alt text"></p>
 <h4 id="2一般形式明文攻击">2、一般形式明文攻击</h4>
 <p>已知明文信息<br>
 <code>bkcrack -C crypto.zip -c 123.txt -p 123</code><br>
@@ -95,17 +95,17 @@
 </span></span><span style="display:flex;"><span><span style="color:#75715e">#尝试获取原密码</span>
 </span></span><span style="display:flex;"><span>bkcrack <span style="color:#f92672">-</span>k da3cda9d <span style="color:#ae81ff">4</span>cbfcb95 cfaa7211 <span style="color:#f92672">--</span>recover<span style="color:#f92672">-</span>password <span style="color:#ae81ff">10</span> <span style="color:#960050;background-color:#1e0010">?</span>p
 </span></span><span style="display:flex;"><span>bkcrack <span style="color:#f92672">-</span>k da3cda9d <span style="color:#ae81ff">4</span>cbfcb95 cfaa7211 <span style="color:#f92672">--</span>bruteforce <span style="color:#960050;background-color:#1e0010">?</span>b <span style="color:#f92672">--</span>length <span style="color:#ae81ff">0..9</span>
-</span></span></code></pre></div><p><img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708847870509-03b3c897-d6f6-46b7-9d32-a8a978200f0b.png#averageHue=%230d0a07&amp;clientId=u8317943b-f61b-4&amp;from=paste&amp;height=185&amp;id=uc12a155d&amp;originHeight=185&amp;originWidth=788&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=19080&amp;status=done&amp;style=none&amp;taskId=ucea249cf-d147-405d-9344-cec8acd61dc&amp;title=&amp;width=788" alt="image.png"></p>
+</span></span></code></pre></div><p><img src="/img/image-13.png" alt="alt text"></p>
 <h5 id="例题">例题：</h5>
 <h6 id="challenge1">challenge1</h6>
-<p><img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708848758852-e6f33258-a87a-4445-8a38-0bc85e34a8f2.png#averageHue=%230c0908&amp;clientId=u8317943b-f61b-4&amp;from=paste&amp;height=165&amp;id=u16e212d7&amp;originHeight=165&amp;originWidth=987&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=17234&amp;status=done&amp;style=none&amp;taskId=u68ec8346-f772-440d-b134-a5b903d97d5&amp;title=&amp;width=987" alt="image.png">
-<img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708848984477-bbc21b07-45b9-4554-bdbc-33651e04edce.png#averageHue=%23fbf8f6&amp;clientId=u8317943b-f61b-4&amp;from=paste&amp;height=372&amp;id=u23bdf30b&amp;originHeight=372&amp;originWidth=875&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=74423&amp;status=done&amp;style=none&amp;taskId=u090e62e0-7cfe-4dc0-8500-e8c3cf97c1a&amp;title=&amp;width=875" alt="image.png">
+<p><img src="/img/image-14.png" alt="alt text">
+<img src="/img/image-15.png" alt="alt text">
 <code>bkcrack -C challenge_1.zip -c chromedriver_linux64.zip -p chromedriver_linux64.zip -U cha1_dec.zip &quot;&quot;</code>   密码置空</p>
 <h6 id="challenge2">challenge2</h6>
-<p><img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708849629364-ef9056b1-1d6a-49a2-a860-d5e4702f9a35.png#averageHue=%230d0a08&amp;clientId=u8317943b-f61b-4&amp;from=paste&amp;height=145&amp;id=ue1238841&amp;originHeight=145&amp;originWidth=897&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=13901&amp;status=done&amp;style=none&amp;taskId=ud6e5b257-716b-46bd-b28d-edbe36bc256&amp;title=&amp;width=897" alt="image.png"></p>
+<p><img src="/img/image-16.png" alt="alt text"></p>
 <p><code>.pcapng</code> 格式文件
 pcapng 的开头部分是一个叫 Section Header Block 的数据结构：
-<img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708399269332-9fc63f56-c60e-425b-b9a2-c0bd3d4ca752.png#averageHue=%23a9cc64&amp;clientId=u32379adc-a160-4&amp;from=paste&amp;height=705&amp;id=ajsbF&amp;originHeight=705&amp;originWidth=1113&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=275571&amp;status=done&amp;style=none&amp;taskId=ud66cd203-6ebd-4b59-b13a-951dd11a016&amp;title=&amp;width=1113" alt="image.png"></p>
+<img src="/img/image-17.png" alt="alt text"></p>
 <ul>
 <li>首先四个字节是 0a0d0d0a，是一定已知的。</li>
 <li>后面的四个字节表示 SHB 的大小。这个数字可能是大端也可能是小端，计算机处理中一般为小端，而且考虑到 SHB 里面记录的信息不多，一般不会超过 255 字节，再怎么说也不会超过 65535 个字节，所以后面两个字节大概是 0000。</li>
@@ -116,7 +116,7 @@ pcapng 的开头部分是一个叫 Section Header Block 的数据结构：
 <p>好的，到这一步我们已经能够肯定文件头一定是 <code>0a0d0d0a____00004d3c2b1a01000000</code>，有 14 个字节，其中 10 个字节连续。
 <code>bkcrack -C challenge_2.zip -c flag2.pcapng -p pcap_header.bin -o 6 -x 0 0a0d0d0a -U challenge_2_dec.zip &quot;&quot;</code>
 （其中 pcap_header.bin 存储的内容如下：）
-<a href="https://github.com/PKU-GeekGame/geekgame-3rd/blob/master/official_writeup/prob24-password/assets/image-20231021044234738.png"><img src="https://github.com/PKU-GeekGame/geekgame-3rd/raw/master/official_writeup/prob24-password/assets/image-20231021044234738.png#from=url&amp;id=zZ3n7&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;status=done&amp;style=none&amp;title=" alt=""></a><img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708851284169-d8198d4d-954f-4d6d-8a59-369bd3c9d07a.png#averageHue=%23312f2b&amp;clientId=u8317943b-f61b-4&amp;from=paste&amp;height=97&amp;id=ua1f7691f&amp;originHeight=97&amp;originWidth=603&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=5327&amp;status=done&amp;style=none&amp;taskId=ue70d1675-8794-4ad3-9122-e6c3c1f047f&amp;title=&amp;width=603" alt="image.png"><br>
+<img src="/img/image-18.png" alt="alt text">
 如果大胆猜测了文件长度字段是 <code>ffffffffffffffff</code>，它会跑得更快一些。</p>
 <h3 id="实战中已知明文攻击使用">实战中已知明文攻击使用</h3>
 <h4 id="当有文件仅存储时通过扩展名推测明文">当有文件仅存储时，通过扩展名推测明文</h4>
@@ -141,9 +141,9 @@ ZIP文件会包含其中文件名，知道或可以猜测该压缩包内的文�
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>echo <span style="color:#f92672">-</span>n <span style="color:#f92672">-</span>e <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\xf6</span><span style="color:#e6db74">&lt;&lt;&lt; Oracle VM VirtualBox Disk Image &gt;&gt;&gt;&#34;</span> <span style="color:#f92672">&gt;</span> plain<span style="color:#f92672">.</span>txt
 </span></span><span style="display:flex;"><span>bkcrack <span style="color:#f92672">-</span>C Challange<span style="color:#f92672">.</span>zip <span style="color:#f92672">-</span>c oracle<span style="color:#f92672">.</span>vdi <span style="color:#f92672">-</span>p plain<span style="color:#f92672">.</span>txt <span style="color:#f92672">-</span>o <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
-</span></span></code></pre></div><p><a href="https://pkware.cachefly.net/webdocs/APPNOTE/APPNOTE-6.3.9.TXT">https://pkware.cachefly.net/webdocs/APPNOTE/APPNOTE-6.3.9.TXT</a>
+</span></span></code></pre></div><p><a href="https://pkware.cachefly.net/webdocs/APPNOTE/APPNOTE-6.3.9.TXT">https://pkware.cachefly.net/webdocs/APPNOTE/APPNOTE-6.3.9.TXT</a><br>
 压缩包在存储的文件数据之前添加了一个12字节的加密标头，加密标头的最后一个字节是文件CRC值的最高位字节
-<img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708861002920-8846960f-bc35-44ba-bad3-d44c042932fc.png#averageHue=%23221f1c&amp;clientId=u8317943b-f61b-4&amp;from=paste&amp;height=360&amp;id=uda17a432&amp;originHeight=360&amp;originWidth=1476&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=67758&amp;status=done&amp;style=none&amp;taskId=u06fa9469-c3c3-44a9-8720-35fb445d096&amp;title=&amp;width=1476" alt="image.png"></p>
+<img src="/img/image-19.png" alt="alt text"></p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>Signature<span style="color:#960050;background-color:#1e0010">（</span>标志<span style="color:#960050;background-color:#1e0010">）：</span><span style="color:#ae81ff">4</span>个字节<span style="color:#960050;background-color:#1e0010">，</span>表示局部文件头的标志<span style="color:#960050;background-color:#1e0010">。</span>对于非加密文件<span style="color:#960050;background-color:#1e0010">，</span>这个值为 <span style="color:#ae81ff">0x04034b50</span><span style="color:#960050;background-color:#1e0010">。</span>
 </span></span><span style="display:flex;"><span>Version Needed To Extract<span style="color:#960050;background-color:#1e0010">（</span>需要解压的版本<span style="color:#960050;background-color:#1e0010">）：</span><span style="color:#ae81ff">2</span>个字节<span style="color:#960050;background-color:#1e0010">，</span>表示解压所需的最低ZIP规范版本<span style="color:#960050;background-color:#1e0010">。</span>
 </span></span><span style="display:flex;"><span>General Purpose Bit Flag<span style="color:#960050;background-color:#1e0010">（</span>通用位标志<span style="color:#960050;background-color:#1e0010">）：</span><span style="color:#ae81ff">2</span>个字节<span style="color:#960050;background-color:#1e0010">，</span>包含一些通用标志<span style="color:#960050;background-color:#1e0010">，</span>其中第13位<span style="color:#960050;background-color:#1e0010">（</span>从右向左数<span style="color:#960050;background-color:#1e0010">）</span>表示是否使用了加密<span style="color:#960050;background-color:#1e0010">。</span>如果加密<span style="color:#960050;background-color:#1e0010">，</span>则这个位的值为1<span style="color:#960050;background-color:#1e0010">，</span>否则为0<span style="color:#960050;background-color:#1e0010">。</span>
@@ -170,9 +170,9 @@ ZIP文件会包含其中文件名，知道或可以猜测该压缩包内的文�
 直接明文攻击可能失败
 <code>bkcrack -C secrets.zip -c secrets.jpg -P deflate_jpg.zip -p origin.jpg</code>
 寻找zip不同压缩等级
-<img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708910897779-662c9093-ed78-40a1-94cd-e0f9ad2da37e.png#averageHue=%230c0908&amp;clientId=u5107b1cc-3a32-4&amp;from=paste&amp;height=335&amp;id=udacab23c&amp;originHeight=335&amp;originWidth=897&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=31526&amp;status=done&amp;style=none&amp;taskId=u1a87de21-d044-41fe-9170-c47a57273c6&amp;title=&amp;width=897" alt="image.png">
-<img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708911343856-6338e943-221e-4080-b362-6d69528a477b.png#averageHue=%23090706&amp;clientId=u5107b1cc-3a32-4&amp;from=paste&amp;height=163&amp;id=ue8b1c3d0&amp;originHeight=163&amp;originWidth=1215&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=19586&amp;status=done&amp;style=none&amp;taskId=u5ac65798-d614-4aa8-ad28-e0b32579450&amp;title=&amp;width=1215" alt="image.png">
-<img src="https://cdn.nlark.com/yuque/0/2024/png/22202341/1708911359806-a8253c40-cd81-4e99-90a4-4ddc4f44eef9.png#averageHue=%23090705&amp;clientId=u5107b1cc-3a32-4&amp;from=paste&amp;height=255&amp;id=uc096621d&amp;originHeight=255&amp;originWidth=1158&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=26789&amp;status=done&amp;style=none&amp;taskId=u3b18934b-a8df-41d6-afdf-a9b7cf8743c&amp;title=&amp;width=1158" alt="image.png">
+<img src="/img/image-20.png" alt="alt text"><br>
+<img src="/img/image-21.png" alt="alt text">
+<img src="/img/image-22.png" alt="alt text">
 测试不同的压缩格式</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>import os
 </span></span><span style="display:flex;"><span>import subprocess
